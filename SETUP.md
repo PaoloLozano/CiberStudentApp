@@ -95,93 +95,93 @@ com.cibertec.student/
 ├── data/                                   ← CAPA DE DATOS
 │   ├── local/
 │   │   ├── dao/
-│   │   │   ├── CourseDao.kt
-│   │   │   ├── TaskDao.kt
-│   │   │   ├── NoteDao.kt
-│   │   │   └── AttendanceDao.kt
+│   │   │   ├── CourseDao.kt              # Consultas SQL: listar cursos por día, insertar, eliminar
+│   │   │   ├── TaskDao.kt                # Consultas SQL: filtrar por fecha, por estado completado/pendiente
+│   │   │   ├── NoteDao.kt                # Consultas SQL: buscar por texto, ordenar por fecha
+│   │   │   └── AttendanceDao.kt          # Consultas SQL: contar presencias/ausencias por curso
 │   │   ├── entity/
-│   │   │   ├── CourseEntity.kt
-│   │   │   ├── TaskEntity.kt
-│   │   │   ├── NoteEntity.kt
-│   │   │   └── AttendanceEntity.kt
+│   │   │   ├── CourseEntity.kt           # Tabla 'courses' en SQLite: nombre, profesor, aula, días, hora
+│   │   │   ├── TaskEntity.kt             # Tabla 'tasks': título, fecha límite, prioridad, completado
+│   │   │   ├── NoteEntity.kt             # Tabla 'notes': título, contenido, color, curso relacionado
+│   │   │   └── AttendanceEntity.kt       # Tabla 'attendance': fecha, estado (presente/ausente), curso
 │   │   ├── converter/
-│   │   │   └── Converters.kt
+│   │   │   └── Converters.kt             # Convierte listas y fechas a tipos que Room puede guardar en SQLite
 │   │   └── database/
-│   │       └── AppDatabase.kt
+│   │       └── AppDatabase.kt            # Clase principal de Room: define todas las tablas y versión de BD
 │   └── repository/
-│       ├── AuthRepositoryImpl.kt
-│       ├── CourseRepositoryImpl.kt
-│       ├── TaskRepositoryImpl.kt
-│       ├── NoteRepositoryImpl.kt
-│       └── AttendanceRepositoryImpl.kt
+│       ├── AuthRepositoryImpl.kt         # Login y registro usando Firebase Authentication
+│       ├── CourseRepositoryImpl.kt       # Lee/escribe cursos combinando Room (local) y Firestore (nube)
+│       ├── TaskRepositoryImpl.kt         # Gestiona tareas con sincronización Room + Firestore
+│       ├── NoteRepositoryImpl.kt         # Gestiona notas con sincronización Room + Firestore
+│       └── AttendanceRepositoryImpl.kt   # Gestiona asistencia con sincronización Room + Firestore
 │
 ├── domain/                                 ← CAPA DE DOMINIO
 │   ├── model/
-│   │   ├── User.kt
-│   │   ├── Course.kt
-│   │   ├── Task.kt
-│   │   ├── Note.kt
-│   │   └── AttendanceRecord.kt
+│   │   ├── User.kt                       # Modelo de usuario: id, nombre, email, carrera
+│   │   ├── Course.kt                     # Modelo de curso: nombre, profesor, aula, horario, color
+│   │   ├── Task.kt                       # Modelo de tarea: título, fecha límite, prioridad, estado
+│   │   ├── Note.kt                       # Modelo de nota: título, contenido, color de tarjeta, curso
+│   │   └── AttendanceRecord.kt           # Modelo de asistencia: fecha, estado, porcentaje acumulado
 │   └── repository/  (interfaces)
-│       ├── AuthRepository.kt
-│       ├── CourseRepository.kt
-│       ├── TaskRepository.kt
-│       ├── NoteRepository.kt
-│       └── AttendanceRepository.kt
+│       ├── AuthRepository.kt             # Define: login(), register(), logout(), getCurrentUser()
+│       ├── CourseRepository.kt           # Define: getCourses(), addCourse(), updateCourse(), deleteCourse()
+│       ├── TaskRepository.kt             # Define: getTasks(), addTask(), completeTask(), deleteTask()
+│       ├── NoteRepository.kt             # Define: getNotes(), addNote(), updateNote(), search()
+│       └── AttendanceRepository.kt       # Define: getAttendance(), registerAttendance(), getPercentage()
 │
 ├── presentation/                           ← CAPA DE PRESENTACIÓN
 │   ├── splash/
-│   │   └── SplashActivity.kt
+│   │   └── SplashActivity.kt             # Splash con logo animado, redirige a Auth o Main según sesión
 │   ├── auth/
-│   │   ├── AuthActivity.kt
-│   │   ├── AuthViewModel.kt
-│   │   ├── LoginFragment.kt
-│   │   └── RegisterFragment.kt
+│   │   ├── AuthActivity.kt               # Contenedor del flujo Login/Register
+│   │   ├── AuthViewModel.kt              # Maneja estado de login y registro con StateFlow
+│   │   ├── LoginFragment.kt              # Pantalla de inicio de sesión con email y contraseña
+│   │   └── RegisterFragment.kt           # Pantalla de registro, valida que contraseñas coincidan
 │   ├── main/
-│   │   └── MainActivity.kt
+│   │   └── MainActivity.kt               # Activity principal con BottomNavigation y NavHostFragment
 │   ├── home/
-│   │   ├── HomeFragment.kt
-│   │   ├── HomeViewModel.kt
-│   │   └── TodayCourseAdapter.kt
+│   │   ├── HomeFragment.kt               # Dashboard: cursos del día, tareas próximas y resumen
+│   │   ├── HomeViewModel.kt              # Combina datos de cursos y tareas para el dashboard
+│   │   └── TodayCourseAdapter.kt         # RecyclerView de cursos del día en el Home
 │   ├── schedule/
-│   │   ├── ScheduleFragment.kt
-│   │   ├── ScheduleViewModel.kt
-│   │   ├── CourseAdapter.kt
-│   │   └── AddCourseDialog.kt
+│   │   ├── ScheduleFragment.kt           # Horarios con calendario semanal y lista de cursos por día
+│   │   ├── ScheduleViewModel.kt          # Filtra cursos por día de la semana seleccionado
+│   │   ├── CourseAdapter.kt              # RecyclerView de cursos con swipe para eliminar
+│   │   └── AddCourseDialog.kt            # BottomSheet para agregar/editar curso
 │   ├── tasks/
-│   │   ├── TasksFragment.kt
-│   │   ├── TasksViewModel.kt
-│   │   ├── TaskAdapter.kt
-│   │   └── AddTaskDialog.kt
+│   │   ├── TasksFragment.kt              # Pantalla de tareas con filtros por estado
+│   │   ├── TasksViewModel.kt             # Filtra tareas y programa recordatorios con AlarmManager
+│   │   ├── TaskAdapter.kt                # RecyclerView con checkbox y chip de prioridad
+│   │   └── AddTaskDialog.kt              # BottomSheet para agregar tarea con fecha y prioridad
 │   ├── notes/
-│   │   ├── NotesFragment.kt
-│   │   ├── NotesViewModel.kt
-│   │   ├── NoteAdapter.kt
-│   │   └── AddNoteDialog.kt
+│   │   ├── NotesFragment.kt              # Grilla de 2 columnas con buscador en tiempo real
+│   │   ├── NotesViewModel.kt             # Filtra notas por texto con debounce de 300ms
+│   │   ├── NoteAdapter.kt                # ListAdapter + DiffUtil para tarjetas de notas con color
+│   │   └── AddNoteDialog.kt              # BottomSheet para crear/editar nota con selector de color
 │   └── attendance/
-│       ├── AttendanceFragment.kt
-│       ├── AttendanceViewModel.kt
-│       └── AttendanceCourseAdapter.kt
+│       ├── AttendanceFragment.kt         # Porcentaje por curso y botones Presente/Ausente
+│       ├── AttendanceViewModel.kt        # Calcula % asistencia y alerta si baja del 70%
+│       └── AttendanceCourseAdapter.kt    # RecyclerView de cursos con barra de progreso
 │
 ├── core/                                   ← UTILIDADES
 │   ├── notifications/
-│   │   ├── NotificationScheduler.kt
-│   │   ├── ReminderReceiver.kt
-│   │   ├── BootReceiver.kt
-│   │   └── CiberFirebaseMessagingService.kt
+│   │   ├── NotificationScheduler.kt      # Programa alarmas locales con AlarmManager
+│   │   ├── ReminderReceiver.kt           # Recibe la alarma y muestra notificación en pantalla
+│   │   ├── BootReceiver.kt               # Re-programa alarmas cuando el teléfono se reinicia
+│   │   └── CiberFirebaseMessagingService.kt  # Recibe notificaciones push de Firebase (FCM)
 │   ├── utils/
-│   │   ├── DateUtils.kt
-│   │   └── Extensions.kt
+│   │   ├── DateUtils.kt                  # Formatear fechas, calcular diferencia de días
+│   │   └── Extensions.kt                 # Funciones Kotlin: visible(), gone(), isValidEmail()
 │   └── constants/
-│       └── Constants.kt
+│       └── Constants.kt                  # Nombres de colecciones Firestore, canal notificaciones
 │
 ├── di/                                     ← INYECCIÓN DE DEPENDENCIAS (Hilt)
-│   ├── AppModule.kt
-│   ├── DatabaseModule.kt
-│   ├── FirebaseModule.kt
-│   └── RepositoryModule.kt
+│   ├── AppModule.kt                      # Provee Context, SharedPreferences, NotificationScheduler
+│   ├── DatabaseModule.kt                 # Crea la instancia única de Room y todos los DAOs
+│   ├── FirebaseModule.kt                 # Crea instancias de FirebaseAuth y FirebaseFirestore
+│   └── RepositoryModule.kt               # Vincula interfaces de dominio con sus implementaciones
 │
-└── CiberStudentApp.kt                      ← Application class
+└── CiberStudentApp.kt                      # Application class: inicializa Hilt al arrancar la app
 ```
 
 ### Recursos (res/)
