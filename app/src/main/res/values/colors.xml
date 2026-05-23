@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Blue Palette -->
+    <color name="primary">#1565C0</color>
+    <color name="primary_dark">#003c8f</color>
+    <color name="primary_light">#5e92f3</color>
+    <color name="primary_variant">#0D47A1</color>
+
+    <!-- Accent -->
+    <color name="accent">#FF6F00</color>
+    <color name="accent_light">#FFA040</color>
+
+    <!-- Backgrounds -->
+    <color name="background">#F4F6FB</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#EEF2FF</color>
+    <color name="card_background">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A1A2E</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_hint">#9CA3AF</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_on_dark">#FFFFFF</color>
+
+    <!-- Status Colors -->
+    <color name="success">#2E7D32</color>
+    <color name="success_light">#E8F5E9</color>
+    <color name="warning">#F57F17</color>
+    <color name="warning_light">#FFF8E1</color>
+    <color name="error">#C62828</color>
+    <color name="error_light">#FFEBEE</color>
+    <color name="info">#1565C0</color>
+    <color name="info_light">#E3F2FD</color>
+
+    <!-- Course Colors -->
+    <color name="course_blue">#1565C0</color>
+    <color name="course_purple">#6A1B9A</color>
+    <color name="course_green">#2E7D32</color>
+    <color name="course_orange">#E65100</color>
+    <color name="course_teal">#00695C</color>
+    <color name="course_red">#C62828</color>
+    <color name="course_indigo">#283593</color>
+    <color name="course_pink">#AD1457</color>
+
+    <!-- Divider / Border -->
+    <color name="divider">#E5E7EB</color>
+    <color name="border">#D1D5DB</color>
+
+    <!-- Overlay -->
+    <color name="overlay_dark">#CC000000</color>
+    <color name="overlay_light">#80FFFFFF</color>
+
+    <!-- Splash gradient -->
+    <color name="splash_start">#0D47A1</color>
+    <color name="splash_end">#1976D2</color>
+
+    <!-- Shimmer -->
+    <color name="shimmer_base">#E8ECF4</color>
+    <color name="shimmer_highlight">#F4F6FB</color>
+
+    <!-- Bottom Nav -->
+    <color name="nav_selected">#1565C0</color>
+    <color name="nav_unselected">#9CA3AF</color>
+</resources>

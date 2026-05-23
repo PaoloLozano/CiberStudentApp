@@ -1,0 +1,1 @@
+[{"navFile":"src\\main\\res\\navigation\\nav_auth.xml","javaFiles":["com.cibertec.student.presentation.auth.LoginFragmentDirections","com.cibertec.student.presentation.auth.RegisterFragmentDirections"]},{"navFile":"src\\main\\res\\navigation\\nav_main.xml","javaFiles":[]}]

@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.cibertec.student.app-mergeDebugResources-70:/values-v29/values-v29.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.11.1\\transforms\\b65cc065ae79286179f4c5ae2c2e768a\\transformed\\jetified-core-splashscreen-1.0.1\\res\\values-v29\\values-v29.xml",
+                    "from": {
+                        "startLines": "2,7",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,374",
+                        "endLines": "6,8",
+                        "endColumns": "12,12",
+                        "endOffsets": "369,464"
+                    }
+                }
+            ]
+        }
+    ]
+}

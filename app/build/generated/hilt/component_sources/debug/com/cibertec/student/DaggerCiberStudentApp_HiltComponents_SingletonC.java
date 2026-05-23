@@ -1,0 +1,803 @@
+package com.cibertec.student;
+
+import android.app.Activity;
+import android.app.Service;
+import android.view.View;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.SavedStateHandle;
+import androidx.lifecycle.ViewModel;
+import com.cibertec.student.core.notifications.NotificationScheduler;
+import com.cibertec.student.data.local.dao.AttendanceDao;
+import com.cibertec.student.data.local.dao.CourseDao;
+import com.cibertec.student.data.local.dao.NoteDao;
+import com.cibertec.student.data.local.dao.TaskDao;
+import com.cibertec.student.data.local.database.AppDatabase;
+import com.cibertec.student.data.repository.AttendanceRepositoryImpl;
+import com.cibertec.student.data.repository.AuthRepositoryImpl;
+import com.cibertec.student.data.repository.CourseRepositoryImpl;
+import com.cibertec.student.data.repository.NoteRepositoryImpl;
+import com.cibertec.student.data.repository.TaskRepositoryImpl;
+import com.cibertec.student.di.AppModule_ProvideNotificationSchedulerFactory;
+import com.cibertec.student.di.DatabaseModule_ProvideAppDatabaseFactory;
+import com.cibertec.student.di.DatabaseModule_ProvideAttendanceDaoFactory;
+import com.cibertec.student.di.DatabaseModule_ProvideCourseDaoFactory;
+import com.cibertec.student.di.DatabaseModule_ProvideNoteDaoFactory;
+import com.cibertec.student.di.DatabaseModule_ProvideTaskDaoFactory;
+import com.cibertec.student.di.FirebaseModule_ProvideFirebaseAuthFactory;
+import com.cibertec.student.di.FirebaseModule_ProvideFirestoreFactory;
+import com.cibertec.student.domain.repository.AttendanceRepository;
+import com.cibertec.student.domain.repository.AuthRepository;
+import com.cibertec.student.domain.repository.CourseRepository;
+import com.cibertec.student.domain.repository.NoteRepository;
+import com.cibertec.student.domain.repository.TaskRepository;
+import com.cibertec.student.presentation.attendance.AttendanceFragment;
+import com.cibertec.student.presentation.attendance.AttendanceViewModel;
+import com.cibertec.student.presentation.attendance.AttendanceViewModel_HiltModules;
+import com.cibertec.student.presentation.attendance.AttendanceViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.cibertec.student.presentation.attendance.AttendanceViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.cibertec.student.presentation.auth.AuthActivity;
+import com.cibertec.student.presentation.auth.AuthViewModel;
+import com.cibertec.student.presentation.auth.AuthViewModel_HiltModules;
+import com.cibertec.student.presentation.auth.AuthViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.cibertec.student.presentation.auth.AuthViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.cibertec.student.presentation.auth.LoginFragment;
+import com.cibertec.student.presentation.auth.RegisterFragment;
+import com.cibertec.student.presentation.home.HomeFragment;
+import com.cibertec.student.presentation.home.HomeViewModel;
+import com.cibertec.student.presentation.home.HomeViewModel_HiltModules;
+import com.cibertec.student.presentation.home.HomeViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.cibertec.student.presentation.home.HomeViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.cibertec.student.presentation.main.MainActivity;
+import com.cibertec.student.presentation.notes.NotesFragment;
+import com.cibertec.student.presentation.notes.NotesViewModel;
+import com.cibertec.student.presentation.notes.NotesViewModel_HiltModules;
+import com.cibertec.student.presentation.notes.NotesViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.cibertec.student.presentation.notes.NotesViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.cibertec.student.presentation.schedule.ScheduleFragment;
+import com.cibertec.student.presentation.schedule.ScheduleViewModel;
+import com.cibertec.student.presentation.schedule.ScheduleViewModel_HiltModules;
+import com.cibertec.student.presentation.schedule.ScheduleViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.cibertec.student.presentation.schedule.ScheduleViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.cibertec.student.presentation.splash.SplashActivity;
+import com.cibertec.student.presentation.splash.SplashActivity_MembersInjector;
+import com.cibertec.student.presentation.tasks.TasksFragment;
+import com.cibertec.student.presentation.tasks.TasksViewModel;
+import com.cibertec.student.presentation.tasks.TasksViewModel_HiltModules;
+import com.cibertec.student.presentation.tasks.TasksViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.cibertec.student.presentation.tasks.TasksViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import dagger.hilt.android.ActivityRetainedLifecycle;
+import dagger.hilt.android.ViewModelLifecycle;
+import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
+import dagger.hilt.android.internal.builders.ActivityRetainedComponentBuilder;
+import dagger.hilt.android.internal.builders.FragmentComponentBuilder;
+import dagger.hilt.android.internal.builders.ServiceComponentBuilder;
+import dagger.hilt.android.internal.builders.ViewComponentBuilder;
+import dagger.hilt.android.internal.builders.ViewModelComponentBuilder;
+import dagger.hilt.android.internal.builders.ViewWithFragmentComponentBuilder;
+import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories;
+import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories_InternalFactoryFactory_Factory;
+import dagger.hilt.android.internal.managers.ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory;
+import dagger.hilt.android.internal.managers.SavedStateHandleHolder;
+import dagger.hilt.android.internal.modules.ApplicationContextModule;
+import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideContextFactory;
+import dagger.internal.DaggerGenerated;
+import dagger.internal.DoubleCheck;
+import dagger.internal.LazyClassKeyMap;
+import dagger.internal.Preconditions;
+import dagger.internal.Provider;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.processing.Generated;
+
+@DaggerGenerated
+@Generated(
+    value = "dagger.internal.codegen.ComponentProcessor",
+    comments = "https://dagger.dev"
+)
+@SuppressWarnings({
+    "unchecked",
+    "rawtypes",
+    "KotlinInternal",
+    "KotlinInternalInJava",
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
+})
+public final class DaggerCiberStudentApp_HiltComponents_SingletonC {
+  private DaggerCiberStudentApp_HiltComponents_SingletonC() {
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static final class Builder {
+    private ApplicationContextModule applicationContextModule;
+
+    private Builder() {
+    }
+
+    public Builder applicationContextModule(ApplicationContextModule applicationContextModule) {
+      this.applicationContextModule = Preconditions.checkNotNull(applicationContextModule);
+      return this;
+    }
+
+    public CiberStudentApp_HiltComponents.SingletonC build() {
+      Preconditions.checkBuilderRequirement(applicationContextModule, ApplicationContextModule.class);
+      return new SingletonCImpl(applicationContextModule);
+    }
+  }
+
+  private static final class ActivityRetainedCBuilder implements CiberStudentApp_HiltComponents.ActivityRetainedC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private SavedStateHandleHolder savedStateHandleHolder;
+
+    private ActivityRetainedCBuilder(SingletonCImpl singletonCImpl) {
+      this.singletonCImpl = singletonCImpl;
+    }
+
+    @Override
+    public ActivityRetainedCBuilder savedStateHandleHolder(
+        SavedStateHandleHolder savedStateHandleHolder) {
+      this.savedStateHandleHolder = Preconditions.checkNotNull(savedStateHandleHolder);
+      return this;
+    }
+
+    @Override
+    public CiberStudentApp_HiltComponents.ActivityRetainedC build() {
+      Preconditions.checkBuilderRequirement(savedStateHandleHolder, SavedStateHandleHolder.class);
+      return new ActivityRetainedCImpl(singletonCImpl, savedStateHandleHolder);
+    }
+  }
+
+  private static final class ActivityCBuilder implements CiberStudentApp_HiltComponents.ActivityC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private Activity activity;
+
+    private ActivityCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+    }
+
+    @Override
+    public ActivityCBuilder activity(Activity activity) {
+      this.activity = Preconditions.checkNotNull(activity);
+      return this;
+    }
+
+    @Override
+    public CiberStudentApp_HiltComponents.ActivityC build() {
+      Preconditions.checkBuilderRequirement(activity, Activity.class);
+      return new ActivityCImpl(singletonCImpl, activityRetainedCImpl, activity);
+    }
+  }
+
+  private static final class FragmentCBuilder implements CiberStudentApp_HiltComponents.FragmentC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private Fragment fragment;
+
+    private FragmentCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+    }
+
+    @Override
+    public FragmentCBuilder fragment(Fragment fragment) {
+      this.fragment = Preconditions.checkNotNull(fragment);
+      return this;
+    }
+
+    @Override
+    public CiberStudentApp_HiltComponents.FragmentC build() {
+      Preconditions.checkBuilderRequirement(fragment, Fragment.class);
+      return new FragmentCImpl(singletonCImpl, activityRetainedCImpl, activityCImpl, fragment);
+    }
+  }
+
+  private static final class ViewWithFragmentCBuilder implements CiberStudentApp_HiltComponents.ViewWithFragmentC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final FragmentCImpl fragmentCImpl;
+
+    private View view;
+
+    private ViewWithFragmentCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        FragmentCImpl fragmentCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+      this.fragmentCImpl = fragmentCImpl;
+    }
+
+    @Override
+    public ViewWithFragmentCBuilder view(View view) {
+      this.view = Preconditions.checkNotNull(view);
+      return this;
+    }
+
+    @Override
+    public CiberStudentApp_HiltComponents.ViewWithFragmentC build() {
+      Preconditions.checkBuilderRequirement(view, View.class);
+      return new ViewWithFragmentCImpl(singletonCImpl, activityRetainedCImpl, activityCImpl, fragmentCImpl, view);
+    }
+  }
+
+  private static final class ViewCBuilder implements CiberStudentApp_HiltComponents.ViewC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private View view;
+
+    private ViewCBuilder(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+        ActivityCImpl activityCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+    }
+
+    @Override
+    public ViewCBuilder view(View view) {
+      this.view = Preconditions.checkNotNull(view);
+      return this;
+    }
+
+    @Override
+    public CiberStudentApp_HiltComponents.ViewC build() {
+      Preconditions.checkBuilderRequirement(view, View.class);
+      return new ViewCImpl(singletonCImpl, activityRetainedCImpl, activityCImpl, view);
+    }
+  }
+
+  private static final class ViewModelCBuilder implements CiberStudentApp_HiltComponents.ViewModelC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private SavedStateHandle savedStateHandle;
+
+    private ViewModelLifecycle viewModelLifecycle;
+
+    private ViewModelCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+    }
+
+    @Override
+    public ViewModelCBuilder savedStateHandle(SavedStateHandle handle) {
+      this.savedStateHandle = Preconditions.checkNotNull(handle);
+      return this;
+    }
+
+    @Override
+    public ViewModelCBuilder viewModelLifecycle(ViewModelLifecycle viewModelLifecycle) {
+      this.viewModelLifecycle = Preconditions.checkNotNull(viewModelLifecycle);
+      return this;
+    }
+
+    @Override
+    public CiberStudentApp_HiltComponents.ViewModelC build() {
+      Preconditions.checkBuilderRequirement(savedStateHandle, SavedStateHandle.class);
+      Preconditions.checkBuilderRequirement(viewModelLifecycle, ViewModelLifecycle.class);
+      return new ViewModelCImpl(singletonCImpl, activityRetainedCImpl, savedStateHandle, viewModelLifecycle);
+    }
+  }
+
+  private static final class ServiceCBuilder implements CiberStudentApp_HiltComponents.ServiceC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private Service service;
+
+    private ServiceCBuilder(SingletonCImpl singletonCImpl) {
+      this.singletonCImpl = singletonCImpl;
+    }
+
+    @Override
+    public ServiceCBuilder service(Service service) {
+      this.service = Preconditions.checkNotNull(service);
+      return this;
+    }
+
+    @Override
+    public CiberStudentApp_HiltComponents.ServiceC build() {
+      Preconditions.checkBuilderRequirement(service, Service.class);
+      return new ServiceCImpl(singletonCImpl, service);
+    }
+  }
+
+  private static final class ViewWithFragmentCImpl extends CiberStudentApp_HiltComponents.ViewWithFragmentC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final FragmentCImpl fragmentCImpl;
+
+    private final ViewWithFragmentCImpl viewWithFragmentCImpl = this;
+
+    private ViewWithFragmentCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        FragmentCImpl fragmentCImpl, View viewParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+      this.fragmentCImpl = fragmentCImpl;
+
+
+    }
+  }
+
+  private static final class FragmentCImpl extends CiberStudentApp_HiltComponents.FragmentC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final FragmentCImpl fragmentCImpl = this;
+
+    private FragmentCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        Fragment fragmentParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+
+
+    }
+
+    @Override
+    public void injectAttendanceFragment(AttendanceFragment attendanceFragment) {
+    }
+
+    @Override
+    public void injectLoginFragment(LoginFragment loginFragment) {
+    }
+
+    @Override
+    public void injectRegisterFragment(RegisterFragment registerFragment) {
+    }
+
+    @Override
+    public void injectHomeFragment(HomeFragment homeFragment) {
+    }
+
+    @Override
+    public void injectNotesFragment(NotesFragment notesFragment) {
+    }
+
+    @Override
+    public void injectScheduleFragment(ScheduleFragment scheduleFragment) {
+    }
+
+    @Override
+    public void injectTasksFragment(TasksFragment tasksFragment) {
+    }
+
+    @Override
+    public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
+      return activityCImpl.getHiltInternalFactoryFactory();
+    }
+
+    @Override
+    public ViewWithFragmentComponentBuilder viewWithFragmentComponentBuilder() {
+      return new ViewWithFragmentCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl, fragmentCImpl);
+    }
+  }
+
+  private static final class ViewCImpl extends CiberStudentApp_HiltComponents.ViewC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final ViewCImpl viewCImpl = this;
+
+    private ViewCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+        ActivityCImpl activityCImpl, View viewParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+
+
+    }
+  }
+
+  private static final class ActivityCImpl extends CiberStudentApp_HiltComponents.ActivityC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl = this;
+
+    private ActivityCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, Activity activityParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+
+
+    }
+
+    @Override
+    public void injectAuthActivity(AuthActivity authActivity) {
+    }
+
+    @Override
+    public void injectMainActivity(MainActivity mainActivity) {
+    }
+
+    @Override
+    public void injectSplashActivity(SplashActivity splashActivity) {
+      injectSplashActivity2(splashActivity);
+    }
+
+    @Override
+    public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
+      return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(getViewModelKeys(), new ViewModelCBuilder(singletonCImpl, activityRetainedCImpl));
+    }
+
+    @Override
+    public Map<Class<?>, Boolean> getViewModelKeys() {
+      return LazyClassKeyMap.<Boolean>of(ImmutableMap.<String, Boolean>builderWithExpectedSize(6).put(AttendanceViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AttendanceViewModel_HiltModules.KeyModule.provide()).put(AuthViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AuthViewModel_HiltModules.KeyModule.provide()).put(HomeViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, HomeViewModel_HiltModules.KeyModule.provide()).put(NotesViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, NotesViewModel_HiltModules.KeyModule.provide()).put(ScheduleViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, ScheduleViewModel_HiltModules.KeyModule.provide()).put(TasksViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, TasksViewModel_HiltModules.KeyModule.provide()).build());
+    }
+
+    @Override
+    public ViewModelComponentBuilder getViewModelComponentBuilder() {
+      return new ViewModelCBuilder(singletonCImpl, activityRetainedCImpl);
+    }
+
+    @Override
+    public FragmentComponentBuilder fragmentComponentBuilder() {
+      return new FragmentCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
+    }
+
+    @Override
+    public ViewComponentBuilder viewComponentBuilder() {
+      return new ViewCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
+    }
+
+    @CanIgnoreReturnValue
+    private SplashActivity injectSplashActivity2(SplashActivity instance) {
+      SplashActivity_MembersInjector.injectAuthRepository(instance, singletonCImpl.bindAuthRepositoryProvider.get());
+      return instance;
+    }
+  }
+
+  private static final class ViewModelCImpl extends CiberStudentApp_HiltComponents.ViewModelC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ViewModelCImpl viewModelCImpl = this;
+
+    private Provider<AttendanceViewModel> attendanceViewModelProvider;
+
+    private Provider<AuthViewModel> authViewModelProvider;
+
+    private Provider<HomeViewModel> homeViewModelProvider;
+
+    private Provider<NotesViewModel> notesViewModelProvider;
+
+    private Provider<ScheduleViewModel> scheduleViewModelProvider;
+
+    private Provider<TasksViewModel> tasksViewModelProvider;
+
+    private ViewModelCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam,
+        ViewModelLifecycle viewModelLifecycleParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+
+      initialize(savedStateHandleParam, viewModelLifecycleParam);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final SavedStateHandle savedStateHandleParam,
+        final ViewModelLifecycle viewModelLifecycleParam) {
+      this.attendanceViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
+      this.authViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
+      this.homeViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
+      this.notesViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
+      this.scheduleViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.tasksViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
+    }
+
+    @Override
+    public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(ImmutableMap.<String, javax.inject.Provider<ViewModel>>builderWithExpectedSize(6).put(AttendanceViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) attendanceViewModelProvider)).put(AuthViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) authViewModelProvider)).put(HomeViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) homeViewModelProvider)).put(NotesViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) notesViewModelProvider)).put(ScheduleViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) scheduleViewModelProvider)).put(TasksViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) tasksViewModelProvider)).build());
+    }
+
+    @Override
+    public Map<Class<?>, Object> getHiltViewModelAssistedMap() {
+      return ImmutableMap.<Class<?>, Object>of();
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final ActivityRetainedCImpl activityRetainedCImpl;
+
+      private final ViewModelCImpl viewModelCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+          ViewModelCImpl viewModelCImpl, int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.activityRetainedCImpl = activityRetainedCImpl;
+        this.viewModelCImpl = viewModelCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // com.cibertec.student.presentation.attendance.AttendanceViewModel 
+          return (T) new AttendanceViewModel(singletonCImpl.bindAuthRepositoryProvider.get(), singletonCImpl.bindAttendanceRepositoryProvider.get());
+
+          case 1: // com.cibertec.student.presentation.auth.AuthViewModel 
+          return (T) new AuthViewModel(singletonCImpl.bindAuthRepositoryProvider.get());
+
+          case 2: // com.cibertec.student.presentation.home.HomeViewModel 
+          return (T) new HomeViewModel(singletonCImpl.bindAuthRepositoryProvider.get(), singletonCImpl.bindCourseRepositoryProvider.get(), singletonCImpl.bindTaskRepositoryProvider.get());
+
+          case 3: // com.cibertec.student.presentation.notes.NotesViewModel 
+          return (T) new NotesViewModel(singletonCImpl.bindAuthRepositoryProvider.get(), singletonCImpl.bindNoteRepositoryProvider.get());
+
+          case 4: // com.cibertec.student.presentation.schedule.ScheduleViewModel 
+          return (T) new ScheduleViewModel(singletonCImpl.bindAuthRepositoryProvider.get(), singletonCImpl.bindCourseRepositoryProvider.get());
+
+          case 5: // com.cibertec.student.presentation.tasks.TasksViewModel 
+          return (T) new TasksViewModel(singletonCImpl.bindAuthRepositoryProvider.get(), singletonCImpl.bindTaskRepositoryProvider.get(), singletonCImpl.bindCourseRepositoryProvider.get(), singletonCImpl.provideNotificationSchedulerProvider.get());
+
+          default: throw new AssertionError(id);
+        }
+      }
+    }
+  }
+
+  private static final class ActivityRetainedCImpl extends CiberStudentApp_HiltComponents.ActivityRetainedC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl = this;
+
+    private Provider<ActivityRetainedLifecycle> provideActivityRetainedLifecycleProvider;
+
+    private ActivityRetainedCImpl(SingletonCImpl singletonCImpl,
+        SavedStateHandleHolder savedStateHandleHolderParam) {
+      this.singletonCImpl = singletonCImpl;
+
+      initialize(savedStateHandleHolderParam);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final SavedStateHandleHolder savedStateHandleHolderParam) {
+      this.provideActivityRetainedLifecycleProvider = DoubleCheck.provider(new SwitchingProvider<ActivityRetainedLifecycle>(singletonCImpl, activityRetainedCImpl, 0));
+    }
+
+    @Override
+    public ActivityComponentBuilder activityComponentBuilder() {
+      return new ActivityCBuilder(singletonCImpl, activityRetainedCImpl);
+    }
+
+    @Override
+    public ActivityRetainedLifecycle getActivityRetainedLifecycle() {
+      return provideActivityRetainedLifecycleProvider.get();
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final ActivityRetainedCImpl activityRetainedCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+          int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.activityRetainedCImpl = activityRetainedCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // dagger.hilt.android.ActivityRetainedLifecycle 
+          return (T) ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory.provideActivityRetainedLifecycle();
+
+          default: throw new AssertionError(id);
+        }
+      }
+    }
+  }
+
+  private static final class ServiceCImpl extends CiberStudentApp_HiltComponents.ServiceC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ServiceCImpl serviceCImpl = this;
+
+    private ServiceCImpl(SingletonCImpl singletonCImpl, Service serviceParam) {
+      this.singletonCImpl = singletonCImpl;
+
+
+    }
+  }
+
+  private static final class SingletonCImpl extends CiberStudentApp_HiltComponents.SingletonC {
+    private final ApplicationContextModule applicationContextModule;
+
+    private final SingletonCImpl singletonCImpl = this;
+
+    private Provider<FirebaseAuth> provideFirebaseAuthProvider;
+
+    private Provider<FirebaseFirestore> provideFirestoreProvider;
+
+    private Provider<AuthRepositoryImpl> authRepositoryImplProvider;
+
+    private Provider<AuthRepository> bindAuthRepositoryProvider;
+
+    private Provider<AppDatabase> provideAppDatabaseProvider;
+
+    private Provider<AttendanceDao> provideAttendanceDaoProvider;
+
+    private Provider<CourseDao> provideCourseDaoProvider;
+
+    private Provider<AttendanceRepositoryImpl> attendanceRepositoryImplProvider;
+
+    private Provider<AttendanceRepository> bindAttendanceRepositoryProvider;
+
+    private Provider<CourseRepositoryImpl> courseRepositoryImplProvider;
+
+    private Provider<CourseRepository> bindCourseRepositoryProvider;
+
+    private Provider<TaskDao> provideTaskDaoProvider;
+
+    private Provider<TaskRepositoryImpl> taskRepositoryImplProvider;
+
+    private Provider<TaskRepository> bindTaskRepositoryProvider;
+
+    private Provider<NoteDao> provideNoteDaoProvider;
+
+    private Provider<NoteRepositoryImpl> noteRepositoryImplProvider;
+
+    private Provider<NoteRepository> bindNoteRepositoryProvider;
+
+    private Provider<NotificationScheduler> provideNotificationSchedulerProvider;
+
+    private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
+      this.applicationContextModule = applicationContextModuleParam;
+      initialize(applicationContextModuleParam);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final ApplicationContextModule applicationContextModuleParam) {
+      this.provideFirebaseAuthProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseAuth>(singletonCImpl, 1));
+      this.provideFirestoreProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseFirestore>(singletonCImpl, 2));
+      this.authRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 0);
+      this.bindAuthRepositoryProvider = DoubleCheck.provider((Provider) authRepositoryImplProvider);
+      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 5));
+      this.provideAttendanceDaoProvider = DoubleCheck.provider(new SwitchingProvider<AttendanceDao>(singletonCImpl, 4));
+      this.provideCourseDaoProvider = DoubleCheck.provider(new SwitchingProvider<CourseDao>(singletonCImpl, 6));
+      this.attendanceRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 3);
+      this.bindAttendanceRepositoryProvider = DoubleCheck.provider((Provider) attendanceRepositoryImplProvider);
+      this.courseRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 7);
+      this.bindCourseRepositoryProvider = DoubleCheck.provider((Provider) courseRepositoryImplProvider);
+      this.provideTaskDaoProvider = DoubleCheck.provider(new SwitchingProvider<TaskDao>(singletonCImpl, 9));
+      this.taskRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 8);
+      this.bindTaskRepositoryProvider = DoubleCheck.provider((Provider) taskRepositoryImplProvider);
+      this.provideNoteDaoProvider = DoubleCheck.provider(new SwitchingProvider<NoteDao>(singletonCImpl, 11));
+      this.noteRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 10);
+      this.bindNoteRepositoryProvider = DoubleCheck.provider((Provider) noteRepositoryImplProvider);
+      this.provideNotificationSchedulerProvider = DoubleCheck.provider(new SwitchingProvider<NotificationScheduler>(singletonCImpl, 12));
+    }
+
+    @Override
+    public void injectCiberStudentApp(CiberStudentApp ciberStudentApp) {
+    }
+
+    @Override
+    public Set<Boolean> getDisableFragmentGetContextFix() {
+      return ImmutableSet.<Boolean>of();
+    }
+
+    @Override
+    public ActivityRetainedComponentBuilder retainedComponentBuilder() {
+      return new ActivityRetainedCBuilder(singletonCImpl);
+    }
+
+    @Override
+    public ServiceComponentBuilder serviceComponentBuilder() {
+      return new ServiceCBuilder(singletonCImpl);
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // com.cibertec.student.data.repository.AuthRepositoryImpl 
+          return (T) new AuthRepositoryImpl(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirestoreProvider.get());
+
+          case 1: // com.google.firebase.auth.FirebaseAuth 
+          return (T) FirebaseModule_ProvideFirebaseAuthFactory.provideFirebaseAuth();
+
+          case 2: // com.google.firebase.firestore.FirebaseFirestore 
+          return (T) FirebaseModule_ProvideFirestoreFactory.provideFirestore();
+
+          case 3: // com.cibertec.student.data.repository.AttendanceRepositoryImpl 
+          return (T) new AttendanceRepositoryImpl(singletonCImpl.provideAttendanceDaoProvider.get(), singletonCImpl.provideCourseDaoProvider.get());
+
+          case 4: // com.cibertec.student.data.local.dao.AttendanceDao 
+          return (T) DatabaseModule_ProvideAttendanceDaoFactory.provideAttendanceDao(singletonCImpl.provideAppDatabaseProvider.get());
+
+          case 5: // com.cibertec.student.data.local.database.AppDatabase 
+          return (T) DatabaseModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 6: // com.cibertec.student.data.local.dao.CourseDao 
+          return (T) DatabaseModule_ProvideCourseDaoFactory.provideCourseDao(singletonCImpl.provideAppDatabaseProvider.get());
+
+          case 7: // com.cibertec.student.data.repository.CourseRepositoryImpl 
+          return (T) new CourseRepositoryImpl(singletonCImpl.provideCourseDaoProvider.get());
+
+          case 8: // com.cibertec.student.data.repository.TaskRepositoryImpl 
+          return (T) new TaskRepositoryImpl(singletonCImpl.provideTaskDaoProvider.get());
+
+          case 9: // com.cibertec.student.data.local.dao.TaskDao 
+          return (T) DatabaseModule_ProvideTaskDaoFactory.provideTaskDao(singletonCImpl.provideAppDatabaseProvider.get());
+
+          case 10: // com.cibertec.student.data.repository.NoteRepositoryImpl 
+          return (T) new NoteRepositoryImpl(singletonCImpl.provideNoteDaoProvider.get());
+
+          case 11: // com.cibertec.student.data.local.dao.NoteDao 
+          return (T) DatabaseModule_ProvideNoteDaoFactory.provideNoteDao(singletonCImpl.provideAppDatabaseProvider.get());
+
+          case 12: // com.cibertec.student.core.notifications.NotificationScheduler 
+          return (T) AppModule_ProvideNotificationSchedulerFactory.provideNotificationScheduler(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          default: throw new AssertionError(id);
+        }
+      }
+    }
+  }
+}

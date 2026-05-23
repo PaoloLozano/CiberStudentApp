@@ -1,0 +1,1 @@
+-keep,allowobfuscation,allowshrinking class com.cibertec.student.presentation.schedule.ScheduleViewModel

@@ -1,0 +1,28 @@
+# Google Services - NUNCA subir a GitHub (contiene claves privadas)
+google-services.json
+
+# Android build
+*.iml
+.gradle/
+local.properties
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+*.ap_
+
+# Keystore files
+*.jks
+*.keystore
+
+# Logs
+*.log

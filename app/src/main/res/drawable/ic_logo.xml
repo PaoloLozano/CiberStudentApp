@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Fondo circular azul -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M60,10 C32.4,10 10,32.4 10,60 C10,87.6 32.4,110 60,110 C87.6,110 110,87.6 110,60 C110,32.4 87.6,10 60,10Z" />
+    <!-- Icono de libro/gorro universitario simplificado -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,32 L30,48 L60,64 L90,48 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M45,54 L45,74 C45,74 52,82 60,82 C68,82 75,74 75,74 L75,54 L60,62 Z"
+        android:fillAlpha="0.85" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M88,48 L88,66 M86,66 Q88,70 90,66 L90,66 Z" />
+</vector>

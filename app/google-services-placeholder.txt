@@ -1,0 +1,14 @@
+IMPORTANTE: Debes colocar tu archivo google-services.json aquí.
+
+Tu proyecto Firebase: ciber-estudent (ya creado)
+
+Pasos para obtener el google-services.json:
+1. Ve a https://console.firebase.google.com/
+2. Abre el proyecto "ciber-estudent"
+3. Haz clic en el ícono de Configuración (⚙️) → Configuración del proyecto
+4. En "Tus apps" → Agrega una app Android
+5. Package name: com.cibertec.student
+6. Descarga el google-services.json
+7. Coloca ese archivo en esta misma carpeta (app/)
+
+Sin este archivo la app no compilará correctamente con Firebase.
