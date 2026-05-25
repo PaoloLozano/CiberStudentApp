@@ -30,4 +30,11 @@
         android:name="com.cibertec.student.presentation.attendance.AttendanceFragment"
         android:label="Asistencia" />
 
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.cibertec.student.presentation.profile.ProfileFragment"
+        android:label="Perfil" />
+
+
 </navigation>

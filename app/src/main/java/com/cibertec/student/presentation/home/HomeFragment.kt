@@ -1,9 +1,11 @@
 package com.cibertec.student.presentation.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -14,8 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cibertec.student.R
 import com.cibertec.student.core.utils.DateUtils
 import com.cibertec.student.databinding.FragmentHomeBinding
+import com.cibertec.student.presentation.auth.AuthActivity
 import com.cibertec.student.presentation.schedule.CourseAdapter
 import com.cibertec.student.presentation.tasks.TaskAdapter
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -71,6 +76,38 @@ class HomeFragment : Fragment() {
         binding.tvSeeAllTasks.setOnClickListener {
             findNavController().navigate(R.id.tasksFragment)
         }
+        binding.ivAvatar.setOnClickListener { view -> showAvatarMenu(view) }
+    }
+
+    private fun showAvatarMenu(view: View){
+        val popupMenu = PopupMenu(requireContext(), view)
+
+        popupMenu.menuInflater.inflate(R.menu.avatar_menu, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.profile -> {
+                    findNavController().navigate(R.id.profileFragment)
+                    true
+                }
+                R.id.logout -> {
+                    logout()
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        popupMenu.show()
+    }
+
+    private fun logout() {
+        FirebaseAuth.getInstance().signOut()
+
+        val intent = Intent(requireContext(), AuthActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     private fun observeState() {

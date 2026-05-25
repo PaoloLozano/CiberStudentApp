@@ -177,11 +177,14 @@ id iv_logo
 id iv_next_month
 id iv_prev_month
 id loginFragment
+id logout
 id nav_auth
 id nav_host_auth
 id nav_host_fragment
 id nav_main
 id notesFragment
+id profile
+id profileFragment
 id progress_attendance
 id progress_login
 id progress_register
@@ -217,6 +220,8 @@ id til_student_code
 id til_teacher
 id til_title
 id toolbar
+id tvCodigo
+id tvTitulo
 id tv_absent_count
 id tv_app_name
 id tv_app_name_login
@@ -276,6 +281,7 @@ layout fragment_attendance
 layout fragment_home
 layout fragment_login
 layout fragment_notes
+layout fragment_profile
 layout fragment_register
 layout fragment_schedule
 layout fragment_tasks
@@ -286,6 +292,7 @@ layout item_course
 layout item_note
 layout item_task
 layout item_today_course
+menu avatar_menu
 menu bottom_nav_menu
 mipmap ic_launcher
 mipmap ic_launcher_round
@@ -341,6 +348,7 @@ string greeting_afternoon
 string greeting_evening
 string greeting_morning
 string have_account
+string hello_blank_fragment
 string justified
 string login
 string login_with_google
@@ -352,7 +360,9 @@ string my_notes
 string my_tasks
 string nav_attendance
 string nav_home
+string nav_logout
 string nav_notes
+string nav_profile
 string nav_schedule
 string nav_tasks
 string no

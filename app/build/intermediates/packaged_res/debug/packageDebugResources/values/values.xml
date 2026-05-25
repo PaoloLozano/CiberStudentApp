@@ -122,6 +122,7 @@
     <string name="greeting_evening">¡Buenas noches</string>
     <string name="greeting_morning">¡Buenos días</string>
     <string name="have_account">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="justified">Justificado</string>
     <string name="login">Iniciar Sesión</string>
     <string name="login_with_google">Continuar con Google</string>
@@ -133,7 +134,9 @@
     <string name="my_tasks">Mis tareas</string>
     <string name="nav_attendance">Asistencia</string>
     <string name="nav_home">Inicio</string>
+    <string name="nav_logout">Cerrar Sesion</string>
     <string name="nav_notes">Notas</string>
+    <string name="nav_profile">Ver Perfil</string>
     <string name="nav_schedule">Horarios</string>
     <string name="nav_tasks">Tareas</string>
     <string name="no">No</string>

@@ -4,7 +4,7 @@
             "outputFile": "com.cibertec.student.app-mergeDebugResources-70:/values-w360dp-port-v13/values-w360dp-port-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.11.1\\transforms\\4d824d5dfb3c2902fd861b31c133b4e0\\transformed\\material-1.12.0\\res\\values-w360dp-port-v13\\values-w360dp-port-v13.xml",
+                    "source": "C:\\Users\\Kevin Olazo\\.gradle\\caches\\8.11.1\\transforms\\4d824d5dfb3c2902fd861b31c133b4e0\\transformed\\material-1.12.0\\res\\values-w360dp-port-v13\\values-w360dp-port-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
