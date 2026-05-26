@@ -96,6 +96,7 @@ drawable ic_badge
 drawable ic_calendar
 drawable ic_class
 drawable ic_classroom
+drawable ic_edit
 drawable ic_email
 drawable ic_home
 drawable ic_lock
@@ -112,7 +113,9 @@ id action_login_to_register
 id action_register_to_login
 id app_bar
 id attendanceFragment
+id avatarContainer
 id bottom_nav
+id btnEditAvatar
 id btn_absent
 id btn_cancel
 id btn_login
@@ -120,6 +123,7 @@ id btn_present
 id btn_register
 id btn_save
 id calendar_view
+id cardDetails
 id card_alert
 id card_calendar
 id card_form
@@ -169,8 +173,10 @@ id fab_add_course
 id fab_add_note
 id fab_add_task
 id header
+id headerBackground
 id header_bg
 id homeFragment
+id ivAvatar
 id iv_avatar
 id iv_back
 id iv_logo
@@ -220,7 +226,9 @@ id til_student_code
 id til_teacher
 id til_title
 id toolbar
+id tvCareer
 id tvCodigo
+id tvCycle
 id tvTitulo
 id tv_absent_count
 id tv_app_name
@@ -322,6 +330,7 @@ string days
 string delete
 string due_date
 string edit
+string edit_avatar
 string email
 string email_hint
 string end_time
@@ -380,11 +389,14 @@ string notif_class_soon
 string notif_task_due
 string password
 string pending_tasks
+string placeholder_career
+string placeholder_cycle
 string present
 string priority
 string priority_high
 string priority_low
 string priority_medium
+string profile_code
 string project_id
 string quick_access
 string register
@@ -411,6 +423,7 @@ string wednesday
 string welcome_subtitle
 string welcome_title
 string yes
+style ShapeAppearance.CiberStudent.Circle
 style ShapeAppearance.Round
 style TextAppearance.CiberStudent.Caption
 style TextAppearance.CiberStudent.Subtitle

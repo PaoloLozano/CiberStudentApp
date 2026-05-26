@@ -4,37 +4,71 @@ package com.cibertec.student.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.cibertec.student.R;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
 
 public final class FragmentProfileBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final ConstraintLayout rootView;
+
+  @NonNull
+  public final ConstraintLayout avatarContainer;
+
+  @NonNull
+  public final FloatingActionButton btnEditAvatar;
+
+  @NonNull
+  public final MaterialCardView cardDetails;
+
+  @NonNull
+  public final View headerBackground;
+
+  @NonNull
+  public final ShapeableImageView ivAvatar;
+
+  @NonNull
+  public final TextView tvCareer;
 
   @NonNull
   public final TextView tvCodigo;
 
   @NonNull
+  public final TextView tvCycle;
+
+  @NonNull
   public final TextView tvTitulo;
 
-  private FragmentProfileBinding(@NonNull LinearLayout rootView, @NonNull TextView tvCodigo,
-      @NonNull TextView tvTitulo) {
+  private FragmentProfileBinding(@NonNull ConstraintLayout rootView,
+      @NonNull ConstraintLayout avatarContainer, @NonNull FloatingActionButton btnEditAvatar,
+      @NonNull MaterialCardView cardDetails, @NonNull View headerBackground,
+      @NonNull ShapeableImageView ivAvatar, @NonNull TextView tvCareer, @NonNull TextView tvCodigo,
+      @NonNull TextView tvCycle, @NonNull TextView tvTitulo) {
     this.rootView = rootView;
+    this.avatarContainer = avatarContainer;
+    this.btnEditAvatar = btnEditAvatar;
+    this.cardDetails = cardDetails;
+    this.headerBackground = headerBackground;
+    this.ivAvatar = ivAvatar;
+    this.tvCareer = tvCareer;
     this.tvCodigo = tvCodigo;
+    this.tvCycle = tvCycle;
     this.tvTitulo = tvTitulo;
   }
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public ConstraintLayout getRoot() {
     return rootView;
   }
 
@@ -59,9 +93,51 @@ public final class FragmentProfileBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.avatarContainer;
+      ConstraintLayout avatarContainer = ViewBindings.findChildViewById(rootView, id);
+      if (avatarContainer == null) {
+        break missingId;
+      }
+
+      id = R.id.btnEditAvatar;
+      FloatingActionButton btnEditAvatar = ViewBindings.findChildViewById(rootView, id);
+      if (btnEditAvatar == null) {
+        break missingId;
+      }
+
+      id = R.id.cardDetails;
+      MaterialCardView cardDetails = ViewBindings.findChildViewById(rootView, id);
+      if (cardDetails == null) {
+        break missingId;
+      }
+
+      id = R.id.headerBackground;
+      View headerBackground = ViewBindings.findChildViewById(rootView, id);
+      if (headerBackground == null) {
+        break missingId;
+      }
+
+      id = R.id.ivAvatar;
+      ShapeableImageView ivAvatar = ViewBindings.findChildViewById(rootView, id);
+      if (ivAvatar == null) {
+        break missingId;
+      }
+
+      id = R.id.tvCareer;
+      TextView tvCareer = ViewBindings.findChildViewById(rootView, id);
+      if (tvCareer == null) {
+        break missingId;
+      }
+
       id = R.id.tvCodigo;
       TextView tvCodigo = ViewBindings.findChildViewById(rootView, id);
       if (tvCodigo == null) {
+        break missingId;
+      }
+
+      id = R.id.tvCycle;
+      TextView tvCycle = ViewBindings.findChildViewById(rootView, id);
+      if (tvCycle == null) {
         break missingId;
       }
 
@@ -71,7 +147,8 @@ public final class FragmentProfileBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentProfileBinding((LinearLayout) rootView, tvCodigo, tvTitulo);
+      return new FragmentProfileBinding((ConstraintLayout) rootView, avatarContainer, btnEditAvatar,
+          cardDetails, headerBackground, ivAvatar, tvCareer, tvCodigo, tvCycle, tvTitulo);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

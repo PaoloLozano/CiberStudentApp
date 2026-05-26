@@ -96,6 +96,7 @@
     <string name="delete">Eliminar</string>
     <string name="due_date">Fecha de entrega</string>
     <string name="edit">Editar</string>
+    <string name="edit_avatar">Editar avatar</string>
     <string name="email">Correo electrónico</string>
     <string name="email_hint">ejemplo@cibertec.edu.pe</string>
     <string name="end_time">Hora fin</string>
@@ -154,11 +155,14 @@
     <string name="notif_task_due">Tienes una tarea próxima a vencer</string>
     <string name="password">Contraseña</string>
     <string name="pending_tasks">Tareas pendientes</string>
+    <string name="placeholder_career">Cargando carrera…</string>
+    <string name="placeholder_cycle">Cargando ciclo…</string>
     <string name="present">Presente</string>
     <string name="priority">Prioridad</string>
     <string name="priority_high">Alta</string>
     <string name="priority_low">Baja</string>
     <string name="priority_medium">Media</string>
+    <string name="profile_code">Código: %1$s</string>
     <string name="project_id" translatable="false">ciber-estudent</string>
     <string name="quick_access">Acceso rápido</string>
     <string name="register">Crear Cuenta</string>
@@ -185,6 +189,9 @@
     <string name="welcome_subtitle">Organiza tu vida universitaria en un solo lugar</string>
     <string name="welcome_title">¡Bienvenido a CiberStudent!</string>
     <string name="yes">Sí</string>
+    <style name="ShapeAppearance.CiberStudent.Circle" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
     <style name="ShapeAppearance.Round" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

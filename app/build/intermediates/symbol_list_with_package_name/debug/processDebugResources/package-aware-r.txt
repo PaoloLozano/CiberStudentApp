@@ -3260,6 +3260,7 @@ drawable ic_class
 drawable ic_classroom
 drawable ic_clear_black_24
 drawable ic_clock_black_24dp
+drawable ic_edit
 drawable ic_email
 drawable ic_home
 drawable ic_keyboard_black_24dp
@@ -3456,6 +3457,7 @@ id auto
 id autoComplete
 id autoCompleteToEnd
 id autoCompleteToStart
+id avatarContainer
 id axisRelative
 id barrier
 id baseline
@@ -3476,6 +3478,7 @@ id browser_actions_menu_item_icon
 id browser_actions_menu_item_text
 id browser_actions_menu_items
 id browser_actions_menu_view
+id btnEditAvatar
 id btn_absent
 id btn_cancel
 id btn_login
@@ -3487,6 +3490,7 @@ id cache_measures
 id calendar_view
 id callMeasure
 id cancel_button
+id cardDetails
 id card_alert
 id card_calendar
 id card_form
@@ -3648,6 +3652,7 @@ id group_divider
 id grouping
 id groups
 id header
+id headerBackground
 id header_bg
 id header_title
 id hide_ime_id
@@ -3674,6 +3679,7 @@ id inward
 id is_pooling_container_tag
 id italic
 id item_touch_helper_previous_elevation
+id ivAvatar
 id iv_avatar
 id iv_back
 id iv_logo
@@ -3988,7 +3994,9 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id tvCareer
 id tvCodigo
+id tvCycle
 id tvTitulo
 id tv_absent_count
 id tv_app_name
@@ -4385,6 +4393,7 @@ string delete
 string dest_title
 string due_date
 string edit
+string edit_avatar
 string email
 string email_hint
 string end_time
@@ -4562,11 +4571,14 @@ string path_password_eye_mask_strike_through
 string path_password_eye_mask_visible
 string path_password_strike_through
 string pending_tasks
+string placeholder_career
+string placeholder_cycle
 string present
 string priority
 string priority_high
 string priority_low
 string priority_medium
+string profile_code
 string project_id
 string quick_access
 string register
@@ -4948,6 +4960,7 @@ style RtlOverlay_Widget_AppCompat_Search_DropDown_Text
 style RtlOverlay_Widget_AppCompat_SearchView_MagIcon
 style RtlUnderlay_Widget_AppCompat_ActionButton
 style RtlUnderlay_Widget_AppCompat_ActionButton_Overflow
+style ShapeAppearance_CiberStudent_Circle
 style ShapeAppearance_M3_Comp_Badge_Large_Shape
 style ShapeAppearance_M3_Comp_Badge_Shape
 style ShapeAppearance_M3_Comp_BottomAppBar_Container_Shape

@@ -127,8 +127,14 @@
     <string name="friday">Viernes</string>
     <string name="saturday">Sábado</string>
     <string name="sunday">Domingo</string>
+
+
     <string name="nav_profile">Ver Perfil</string>
     <string name="nav_logout">Cerrar Sesion</string>
+    <string name="profile_code">Código: %1$s</string>
+    <string name="edit_avatar">Editar avatar</string>
+    <string name="placeholder_career">carrera&#8230;</string>
+    <string name="placeholder_cycle">ciclo&#8230;</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -3259,6 +3259,7 @@ int drawable ic_class 0x7f0700b6
 int drawable ic_classroom 0x7f0700b7
 int drawable ic_clear_black_24 0x7f0700b8
 int drawable ic_clock_black_24dp 0x7f0700b9
+int drawable ic_edit 0x7f07011f
 int drawable ic_email 0x7f0700ba
 int drawable ic_home 0x7f0700bb
 int drawable ic_keyboard_black_24dp 0x7f0700bc
@@ -3455,6 +3456,7 @@ int id auto 0x7f08005b
 int id autoComplete 0x7f08005c
 int id autoCompleteToEnd 0x7f08005d
 int id autoCompleteToStart 0x7f08005e
+int id avatarContainer 0x7f0802c1
 int id axisRelative 0x7f08005f
 int id barrier 0x7f080060
 int id baseline 0x7f080061
@@ -3475,6 +3477,7 @@ int id browser_actions_menu_item_icon 0x7f08006f
 int id browser_actions_menu_item_text 0x7f080070
 int id browser_actions_menu_items 0x7f080071
 int id browser_actions_menu_view 0x7f080072
+int id btnEditAvatar 0x7f0802c2
 int id btn_absent 0x7f080073
 int id btn_cancel 0x7f080074
 int id btn_login 0x7f080075
@@ -3486,6 +3489,7 @@ int id cache_measures 0x7f08007a
 int id calendar_view 0x7f08007b
 int id callMeasure 0x7f08007c
 int id cancel_button 0x7f08007d
+int id cardDetails 0x7f0802c3
 int id card_alert 0x7f08007e
 int id card_calendar 0x7f08007f
 int id card_form 0x7f080080
@@ -3647,6 +3651,7 @@ int id group_divider 0x7f08011b
 int id grouping 0x7f08011c
 int id groups 0x7f08011d
 int id header 0x7f08011e
+int id headerBackground 0x7f0802c4
 int id header_bg 0x7f08011f
 int id header_title 0x7f080120
 int id hide_ime_id 0x7f080121
@@ -3673,6 +3678,7 @@ int id inward 0x7f080135
 int id is_pooling_container_tag 0x7f080136
 int id italic 0x7f080137
 int id item_touch_helper_previous_elevation 0x7f080138
+int id ivAvatar 0x7f0802c5
 int id iv_avatar 0x7f080139
 int id iv_back 0x7f08013a
 int id iv_logo 0x7f08013b
@@ -3987,7 +3993,9 @@ int id transition_position 0x7f08026c
 int id transition_scene_layoutid_cache 0x7f08026d
 int id transition_transform 0x7f08026e
 int id triangle 0x7f08026f
+int id tvCareer 0x7f0802c6
 int id tvCodigo 0x7f0802c0
+int id tvCycle 0x7f0802c7
 int id tvTitulo 0x7f0802bf
 int id tv_absent_count 0x7f080270
 int id tv_app_name 0x7f080271
@@ -4384,6 +4392,7 @@ int string delete 0x7f120058
 int string dest_title 0x7f120059
 int string due_date 0x7f12005a
 int string edit 0x7f12005b
+int string edit_avatar 0x7f120134
 int string email 0x7f12005c
 int string email_hint 0x7f12005d
 int string end_time 0x7f12005e
@@ -4561,11 +4570,14 @@ int string path_password_eye_mask_strike_through 0x7f120106
 int string path_password_eye_mask_visible 0x7f120107
 int string path_password_strike_through 0x7f120108
 int string pending_tasks 0x7f120109
+int string placeholder_career 0x7f120135
+int string placeholder_cycle 0x7f120136
 int string present 0x7f12010a
 int string priority 0x7f12010b
 int string priority_high 0x7f12010c
 int string priority_low 0x7f12010d
 int string priority_medium 0x7f12010e
+int string profile_code 0x7f120133
 int string project_id 0x7f12010f
 int string quick_access 0x7f120110
 int string register 0x7f120111
@@ -4947,6 +4959,7 @@ int style RtlOverlay_Widget_AppCompat_Search_DropDown_Text 0x7f130158
 int style RtlOverlay_Widget_AppCompat_SearchView_MagIcon 0x7f130159
 int style RtlUnderlay_Widget_AppCompat_ActionButton 0x7f13015a
 int style RtlUnderlay_Widget_AppCompat_ActionButton_Overflow 0x7f13015b
+int style ShapeAppearance_CiberStudent_Circle 0x7f130482
 int style ShapeAppearance_M3_Comp_Badge_Large_Shape 0x7f13015c
 int style ShapeAppearance_M3_Comp_Badge_Shape 0x7f13015d
 int style ShapeAppearance_M3_Comp_BottomAppBar_Container_Shape 0x7f13015e
