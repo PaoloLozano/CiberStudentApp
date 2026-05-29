@@ -71,6 +71,9 @@ class HomeFragment : Fragment() {
         binding.tvSeeAllTasks.setOnClickListener {
             findNavController().navigate(R.id.tasksFragment)
         }
+        binding.ivAvatar.setOnClickListener {
+            findNavController().navigate(R.id.profileFragment)
+        }
     }
 
     private fun observeState() {

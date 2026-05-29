@@ -13,6 +13,7 @@ import com.cibertec.student.data.local.entity.*
         TaskEntity::class,
         NoteEntity::class,
         AttendanceEntity::class
+
     ],
     version = 1,
     exportSchema = false

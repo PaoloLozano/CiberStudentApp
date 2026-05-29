@@ -43,28 +43,38 @@ class HomeViewModel @Inject constructor(
             val user = authRepository.getCurrentUser()
             _uiState.update { it.copy(user = user, isLoading = false) }
 
-            user?.uid?.let { uid ->
-                val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+            if (user == null) return@launch
+            val uid = user.uid
+            val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
 
-                // Load today's courses
+            // Cursos del día de hoy — reactivo
+            launch {
                 courseRepository.getCoursesForDay(uid, dayOfWeek)
                     .collect { courses ->
                         _uiState.update { it.copy(todayCourses = courses) }
                     }
             }
-        }
 
-        viewModelScope.launch {
-            val user = authRepository.getCurrentUser() ?: return@launch
-            taskRepository.getTasks(user.uid)
-                .collect { tasks ->
-                    val pending = tasks.filter { it.status != Task.TaskStatus.COMPLETED }.take(5)
-                    _uiState.update { it.copy(
-                        pendingTasks = pending,
-                        pendingTaskCount = pending.size,
-                        totalCourses = courseRepository.getCourseCount(user.uid)
-                    )}
-                }
+            // Total de cursos — reactivo, se actualiza al agregar/borrar cursos
+            launch {
+                courseRepository.getCourses(uid)
+                    .collect { courses ->
+                        _uiState.update { it.copy(totalCourses = courses.size) }
+                    }
+            }
+
+            // Tareas pendientes — reactivo
+            launch {
+                taskRepository.getTasks(uid)
+                    .collect { tasks ->
+                        val allPending = tasks.filter { it.status != Task.TaskStatus.COMPLETED }
+                        val preview = allPending.take(5)
+                        _uiState.update { it.copy(
+                            pendingTasks = preview,
+                            pendingTaskCount = allPending.size
+                        )}
+                    }
+            }
         }
     }
 

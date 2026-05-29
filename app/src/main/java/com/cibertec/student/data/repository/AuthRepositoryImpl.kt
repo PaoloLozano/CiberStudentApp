@@ -72,4 +72,13 @@ class AuthRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun updateProfile(user: User): Result<User> {
+        return try {
+            firestore.collection("users").document(user.uid).set(user).await()
+            Result.success(user)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

@@ -31,9 +31,11 @@ class CiberStudentApp : Application() {
             val tasksChannel = NotificationChannel(
                 CHANNEL_TASKS,
                 getString(R.string.notif_channel_tasks),
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 description = "Notificaciones de tareas próximas a vencer"
+                enableLights(true)
+                enableVibration(true)
             }
 
             notificationManager.createNotificationChannels(listOf(reminderChannel, tasksChannel))

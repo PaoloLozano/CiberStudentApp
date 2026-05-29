@@ -110,4 +110,16 @@
         <item name="subtitleTextColor">@color/text_secondary</item>
     </style>
 
+    <!-- Circle Image -->
+    <style name="CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Shape Appearance Round (para avatares circulares) -->
+    <style name="ShapeAppearance.Round" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>

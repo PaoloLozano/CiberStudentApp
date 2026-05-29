@@ -45,10 +45,7 @@ class CourseAdapter(
                 }
 
                 root.setOnClickListener { onCourseClick(course) }
-                root.setOnLongClickListener {
-                    onCourseDelete(course)
-                    true
-                }
+                btnDeleteCourse.setOnClickListener { onCourseDelete(course) }
             }
         }
     }

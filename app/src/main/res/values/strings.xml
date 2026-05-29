@@ -52,8 +52,8 @@
     <string name="days">Días</string>
     <string name="credits">Créditos</string>
     <string name="schedule_calendar">Calendario</string>
-    <string name="no_courses">Aún no tienes cursos agregados</string>
-    <string name="add_first_course">Agrega tu primer curso</string>
+    <string name="no_courses">Aún no tienes cursos agregados este día</string>
+    <string name="add_first_course">Agrega un curso</string>
 
     <!-- Tasks -->
     <string name="my_tasks">Mis tareas</string>

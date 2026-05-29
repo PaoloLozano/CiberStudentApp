@@ -93,32 +93,49 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Credits badge -->
+        <!-- Right side: credits + delete -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@drawable/bg_credits_badge"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="8dp"
             android:layout_marginStart="8dp">
 
-            <TextView
-                android:id="@+id/tv_credits"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
-                android:textColor="@color/primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/bg_credits_badge"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="créd."
-                android:textColor="@color/text_secondary"
-                android:textSize="10sp" />
+                <TextView
+                    android:id="@+id/tv_credits"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    android:textColor="@color/primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="créd."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btn_delete_course"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_delete"
+                android:tint="@color/error"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Eliminar curso"
+                android:layout_marginTop="6dp" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

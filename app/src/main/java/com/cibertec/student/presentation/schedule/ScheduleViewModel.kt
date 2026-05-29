@@ -14,7 +14,7 @@ data class ScheduleUiState(
     val isLoading: Boolean = true,
     val courses: List<Course> = emptyList(),
     val selectedDayCourses: List<Course> = emptyList(),
-    val selectedDay: Int = 2, // Monday by default
+    val selectedDay: Int = -1, // -1 = Todos
     val error: String? = null,
     val successMessage: String? = null
 )
@@ -88,5 +88,6 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun filterByDay(courses: List<Course>, day: Int): List<Course> =
-        courses.filter { it.days.contains(day) }.sortedBy { it.startTime }
+        if (day == -1) courses.sortedBy { it.startTime }
+        else courses.filter { it.days.contains(day) }.sortedBy { it.startTime }
 }

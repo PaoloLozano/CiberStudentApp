@@ -92,11 +92,11 @@ Stack: **Kotlin · MVVM · Clean Architecture · Hilt · Room · Firebase · Cor
 ```
 com.cibertec.student/
 │
-├── data/                                   ← CAPA DE DATOS
+├── data/                                   ← CAPA DE DATOSL: listar cursos por día, insertar, eliminar
+│   │   │   ├── TaskDao.kt                # Consultas SQL: filtrar por fecha, por estado 
 │   ├── local/
 │   │   ├── dao/
-│   │   │   ├── CourseDao.kt              # Consultas SQL: listar cursos por día, insertar, eliminar
-│   │   │   ├── TaskDao.kt                # Consultas SQL: filtrar por fecha, por estado completado/pendiente
+│   │   │   ├── CourseDao.kt              # Consultas SQcompletado/pendiente
 │   │   │   ├── NoteDao.kt                # Consultas SQL: buscar por texto, ordenar por fecha
 │   │   │   └── AttendanceDao.kt          # Consultas SQL: contar presencias/ausencias por curso
 │   │   ├── entity/

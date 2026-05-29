@@ -26,7 +26,7 @@ class ScheduleFragment : Fragment() {
     private val viewModel: ScheduleViewModel by viewModels()
     private lateinit var courseAdapter: CourseAdapter
 
-    private val dayNames = listOf("Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb")
+    private val dayNames  = listOf("Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb")
     private val dayValues = listOf(1, 2, 3, 4, 5, 6, 7)
 
     override fun onCreateView(
@@ -48,7 +48,7 @@ class ScheduleFragment : Fragment() {
         dayNames.forEach { day ->
             binding.tabDays.addTab(binding.tabDays.newTab().setText(day))
         }
-        // Default to Monday (index 1)
+        // Default to Lunes (index 1)
         binding.tabDays.selectTab(binding.tabDays.getTabAt(1))
 
         binding.tabDays.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -62,8 +62,8 @@ class ScheduleFragment : Fragment() {
 
     private fun setupRecyclerView() {
         courseAdapter = CourseAdapter(
-            onCourseClick = { course -> /* show detail */ },
-            onCourseDelete = { course -> viewModel.deleteCourse(course) }
+            onCourseClick = { /* futuro: ver detalle */ },
+            onCourseDelete = { course -> showDeleteConfirmation(course) }
         )
         binding.rvCourses.apply {
             adapter = courseAdapter
@@ -75,16 +75,33 @@ class ScheduleFragment : Fragment() {
         binding.fabAddCourse.setOnClickListener {
             showAddCourseDialog()
         }
+        binding.tvSeeAll.setOnClickListener {
+            viewModel.selectDay(-1)
+            // Deseleccionar el tab activo visualmente
+            binding.tabDays.clearOnTabSelectedListeners()
+            for (i in 0 until binding.tabDays.tabCount) {
+                binding.tabDays.getTabAt(i)?.let { tab ->
+                    tab.view.isSelected = false
+                }
+            }
+            binding.tabDays.selectTab(null)
+            // Re-agregar el listener
+            binding.tabDays.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab) {
+                    viewModel.selectDay(dayValues[tab.position])
+                }
+                override fun onTabUnselected(tab: TabLayout.Tab) {}
+                override fun onTabReselected(tab: TabLayout.Tab) {}
+            })
+        }
     }
 
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    val displayCourses = if (state.selectedDayCourses.isEmpty())
-                        state.courses else state.selectedDayCourses
-
-                    if (state.courses.isEmpty()) {
+                    // Siempre mostrar la lista filtrada por día (puede estar vacía)
+                    if (state.selectedDayCourses.isEmpty() && !state.isLoading) {
                         binding.emptyState.visibility = View.VISIBLE
                         binding.rvCourses.visibility = View.GONE
                     } else {
@@ -92,7 +109,7 @@ class ScheduleFragment : Fragment() {
                         binding.rvCourses.visibility = View.VISIBLE
                     }
 
-                    courseAdapter.submitList(displayCourses)
+                    courseAdapter.submitList(state.selectedDayCourses)
                     binding.tvCoursesCount.text = "${state.courses.size} cursos"
 
                     state.successMessage?.let {
@@ -113,6 +130,15 @@ class ScheduleFragment : Fragment() {
             viewModel.addCourse(course)
         }
         dialog.show(childFragmentManager, "AddCourseDialog")
+    }
+
+    private fun showDeleteConfirmation(course: com.cibertec.student.domain.model.Course) {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Eliminar curso")
+            .setMessage("¿Seguro que quieres eliminar \"${course.name}\"?")
+            .setPositiveButton("Eliminar") { _, _ -> viewModel.deleteCourse(course) }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     override fun onDestroyView() {
